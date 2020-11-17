@@ -22,6 +22,7 @@ export default {
   withImage: true,
   globalSpeed: 8,
   lines:[], 
+  lineColor: '#ffffff',
   togglePlanet(planet) {
     console.log(planet)
     if(this.currentPlanets.includes(planet)) {
@@ -48,6 +49,9 @@ export default {
     this.withImage = el.checked
     this.reset()
   },
+  changeColor(el) {
+    this.lineColor = el.value
+  },
   launch() {
     this.reset()
     loop(_ => {
@@ -58,7 +62,7 @@ export default {
         ctx.lineWidth = 0.2;
         ctx.moveTo(line[0][0], line[0][1]);
         ctx.lineTo(line[1][0], line[1][1]);
-        ctx.strokeStyle = '#ffffff'
+        ctx.strokeStyle = this.lineColor
         ctx.stroke();
       })
       this.currentPlanets.forEach((otherPlanet) => {
