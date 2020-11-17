@@ -62,6 +62,19 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+  .overlay {
+    height: 100vh;
+    background-color: rgba(255,255,255, 0.1);
+    &>div {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      &:hover {
+        background-color: rgba(255,255,255,0.2);
+        transition: 300ms;
+      }
+    }
+  }
 
 </style>
