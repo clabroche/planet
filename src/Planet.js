@@ -1,8 +1,9 @@
-const {canvas, ctx, requestAnimationFrame} = require('./Elements')
+const {ctx} = require('./Elements')
 const Canvas = require('./Canvas')
 module.exports = class {
   constructor(planetConf) {
     this.size = planetConf.size
+    this.name = planetConf.name
     this.img = new Image;
     this.img.onload = ev => {
       console.log('ready')

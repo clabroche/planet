@@ -9,6 +9,20 @@
 <body>
   <div class="overlay">
     <div>
+      Primary planet
+      <select onchange="Planet.changeBasePlanet(this)" class="base-planet">
+        <option id="option-empty" value=""></option>
+        <option id="option-mercure" value="mercure">mercure</option>
+        <option id="option-venus" value="venus">venus</option>
+        <option id="option-earth" value="earth">earth</option>
+        <option id="option-mars" value="mars">mars</option>
+        <option id="option-jupiter" value="jupiter">jupiter</option>
+        <option id="option-saturne" value="saturne">saturne</option>
+        <option id="option-uranus" value="uranus">uranus</option>
+        <option id="option-neptune" value="neptune">neptune</option>
+      </select>
+    </div>
+    <div>
       mercure
       <input type="checkbox" oninput="Planet.togglePlanet(Planet.mercure)">
     </div>
@@ -16,6 +30,11 @@
     <div>
       venus
       <input type="checkbox" oninput="Planet.togglePlanet(Planet.venus)">
+    </div>
+
+    <div>
+      earth
+      <input type="checkbox" oninput="Planet.togglePlanet(Planet.earth)">
     </div>
 
     <div>

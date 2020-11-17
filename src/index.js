@@ -1,5 +1,5 @@
 const loop = require('./loop')
-const { ctx } = require('./Elements')
+const { ctx, basePlanet: basePlanetEl } = require('./Elements')
 const Canvas = require('./Canvas')
 const Planets = require('./Planets')
 
@@ -17,20 +17,45 @@ export default {
   saturne: Planets.saturne,
   uranus: Planets.uranus,
   neptune: Planets.neptune,
-  currentPlanets: [Planets.earth],
-  basePlanet: Planets.earth,
+  currentPlanets: [],
+  basePlanet: null,
   withImage: true,
   globalSpeed: 8,
   lines:[], 
   lineColor: '#ffffff',
   togglePlanet(planet) {
     console.log(planet)
-    if(this.currentPlanets.includes(planet)) {
+    if (this.currentPlanets.includes(planet)) { // remove planet 
       this.currentPlanets.splice(this.currentPlanets.indexOf(planet), 1)
-    } else {
+      if (this.basePlanet === planet && this.currentPlanets.length) {
+        this.basePlanet = this.currentPlanets[0]
+        basePlanetEl.selectedIndex = Object.keys(Planets).indexOf(this.basePlanet.name)
+      } else if (!this.currentPlanets.length) {
+        basePlanetEl.selectedIndex = 0
+      }
+    } else { // add planet 
       this.currentPlanets.unshift(planet)
+      if (!basePlanetEl.selectedIndex) {
+        this.basePlanet = planet
+        basePlanetEl.selectedIndex = Object.keys(Planets).indexOf(this.basePlanet.name)
+      }
     }
+    
+    this.syncBasePlanetSelector()
     this.reset()
+  },
+  syncBasePlanetSelector() {
+    const currentPlanetsNames = this.currentPlanets.map(planet => planet.name)
+    Object.keys(Planets).forEach(planetName => {
+      const el = document.querySelector(`#option-${planetName}`)
+      if (el) {
+        if (currentPlanetsNames.includes(planetName)) {
+          el.style.display = 'block'
+        } else {
+          el.style.display = 'none'
+        }
+      }
+    })
   },
   reset() {
     this.currentPlanets.sort((a, b) => a.daysToMakeATurn - b.daysToMakeATurn)
@@ -40,6 +65,13 @@ export default {
     })
     this.lines = []
     Canvas.reset()
+  },
+  changeBasePlanet(el) {
+    const planet = Planets[el.value]  
+    if(planet) {
+      this.basePlanet = planet
+    }
+    this.reset()
   },
   changeSpeed(el) {
     this.globalSpeed = +el.value
@@ -54,6 +86,7 @@ export default {
   },
   launch() {
     this.reset()
+    this.syncBasePlanetSelector()
     loop(_ => {
       Canvas.reset()
       this.lines = this.lines.slice(0, 4000)
