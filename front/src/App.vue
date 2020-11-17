@@ -11,6 +11,9 @@
     />
   <canvas ref="lines"/>
   <canvas ref="planets"/>
+  <div class="downloads">
+    <button class="as-png" @click="downloadAsPng">Download as png</button>
+  </div>
 </div>
 </template>
 
@@ -59,6 +62,24 @@ export default {
     loop(this.tick)
   },
   methods: {
+    downloadAsPng() {
+      const canvas = this.canvasLines
+      const link = document.createElement('a')
+      let e
+      link.download = 'planets.png'
+      link.href = canvas.toDataURL("image/png;base64")
+      /// create a "fake" click-event to trigger the download
+      if (document.createEvent) {
+        e = document.createEvent("MouseEvents")
+        e.initMouseEvent("click", true, true, window,
+                        0, 0, 0, 0, 0, false, false, false,
+                        false, 0, null)
+
+        link.dispatchEvent(e)
+      } else if (link.fireEvent) {
+        link.fireEvent("onclick")
+      }
+    },
     togglePlanet(planet) {
       if (this.conf.currentPlanets.includes(planet)) { // remove planet 
         this.conf.currentPlanets.splice(this.conf.currentPlanets.indexOf(planet), 1)
@@ -149,5 +170,11 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.downloads {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 </style>
