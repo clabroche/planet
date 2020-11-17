@@ -13,6 +13,7 @@
   <canvas ref="planets"/>
   <div class="downloads">
     <button class="as-png" @click="downloadAsPng">Download as png</button>
+    <button class="as-svg" @click="downloadAsSvg">Download as svg</button>
   </div>
 </div>
 </template>
@@ -22,6 +23,8 @@ import loop from './services/loop'
 import Canvas from './services/Canvas'
 import ConfVue from './components/Conf.vue'
 import Planets from './services/Planets'
+let lines = []
+console.log(lines)
 export default {
   name: 'App',
   components: {
@@ -62,6 +65,42 @@ export default {
     loop(this.tick)
   },
   methods: {
+    downloadAsSvg() {
+      const svg = `
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <svg
+          width="${this.canvasLines.width}mm"
+          height="${this.canvasLines.height}mm"
+          viewBox="0 0 ${this.canvasLines.width} ${this.canvasLines.height}"
+          version="1.1"
+          id="svg8">
+          <rect
+            style="fill:#000000;fill-rule:evenodd;stroke-width:0.264583"
+            id="rect1358"
+            width="${this.canvasLines.width}"
+            height="${this.canvasLines.height}"
+            x="0"
+            y="0" />
+          <g>
+          ${lines.map(line => this.getPath(line)).join('')}
+          </g>
+        </svg>
+      `.split('\n').join(' ').trim()
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(svg);
+      var dlAnchorElem = document.createElement('a');
+      dlAnchorElem.setAttribute("href",     dataStr     );
+      dlAnchorElem.setAttribute("download", "scene.svg");
+      dlAnchorElem.click();
+      return svg
+    },
+    getPath(line) {
+      return `
+        <path
+          style="fill:none;stroke:${line[4]};stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+          d="M ${line[0]},${line[1]} ${line[2]},${line[3]}"
+          id="path14" />
+        `
+    },
     downloadAsPng() {
       const canvas = this.canvasLines
       const link = document.createElement('a')
@@ -99,11 +138,11 @@ export default {
         planet.offset = (i + 1) * 100
         planet.speed = (360 / planet.daysToMakeATurn) * this.conf.globalSpeed
       })
+      lines = []
       Canvas.reset(this.canvasPlanets, this.ctxPlanets)
       Canvas.reset(this.canvasLines, this.ctxLines)
     },
     changeBasePlanet(planet) {
-      console.log(planet)
       if(planet) {
         this.conf.basePlanet = planet
       }
@@ -146,6 +185,9 @@ export default {
         this.ctxLines.lineTo(otherPlanetCoordinate.x, otherPlanetCoordinate.y);
         this.ctxLines.strokeStyle = this.conf.lineColor
         this.ctxLines.stroke();
+        if(lines.length < 10000) {
+          lines.push([planetCoordinate.x, planetCoordinate.y, otherPlanet.x, otherPlanet.y, this.conf.lineColor])
+        }
       })
     },
   }
