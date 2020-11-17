@@ -2,17 +2,15 @@ FROM alpine:3.11 as builder
 RUN apk --no-cache add gcc g++ make python nodejs npm
 
 WORKDIR /planet
-COPY package-lock.json ./package-lock.json
-COPY package.json ./package.json
-RUN npm ci
+RUN npm install -g @vue/cli@latest
 COPY . .
-RUN npm run build
+RUN cd front && npm i
+RUN cd server && npm i
+RUN cd front && npm run build
 
 FROM alpine:3.11
 RUN apk --no-cache add nodejs
 WORKDIR /planet
-COPY --from=builder /planet/node_modules ./node_modules
-COPY --from=builder /planet/server.js .
-COPY --from=builder /planet/dist ./dist
+COPY --from=builder /planet/server .
 
 CMD ["node", "server.js"]

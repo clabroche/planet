@@ -1,2 +1,5 @@
 node_modules
 dist
+front/node_modules
+server/dist
+Dockerfile

@@ -2,22 +2,21 @@
   "name": "planetellipse",
   "version": "1.2.0",
   "description": "",
-  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "serve": "WATCH=true webpack"
+    "postinstall": "cd front && npm i  && cd ../server && npm i",
+    "serve": "cd front && npm run serve",
+    "build": "cd front && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clabroche/planet.git"
   },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "copy-webpack-plugin": "^6.3.1",
-    "file-loader": "^6.2.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^5.4.0",
-    "webpack-cli": "^4.2.0"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clabroche/planet/issues"
   },
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+  "homepage": "https://github.com/clabroche/planet#readme"
 }
